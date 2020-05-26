@@ -12,32 +12,41 @@
 
 #include "exec.h"
 
-static size_t		get_pos_pars_args(char **pars_args)
-{
-	size_t i;
+// static size_t		get_pos_pars_args(char **pars_args)
+// {
+// 	size_t i;
 
-	i = 0;
-	while (pars_args[i])
-		++i;
-	return (i);
+// 	i = 0;
+// 	while (pars_args[i])
+// 		++i;
+// 	return (i);
+// }
+
+// static void			add_param_for_heredoc(t_pars_list *list, char *line)
+static int			add_param_for_heredoc(t_exec_lst *execlist, char *line)
+{
+	// size_t i;
+
+	// i = get_pos_pars_args(list->pars_args);
+	// list->pars_args[i++] = line;
+	// list->pars_args[i] = NULL;
+
+	int fd;
+
+	fd = new_or_open_file(execlist->path_heredoc, 1);
+	ft_putstr_fd(line, fd);
+	exec_dup_stream(STDIN_FILENO, fd);
+	return (fd);
 }
 
-static void			add_param_for_heredoc(t_pars_list *list, char *line)
-{
-	size_t i;
-
-	i = get_pos_pars_args(list->pars_args);
-	list->pars_args[i++] = line;
-	list->pars_args[i] = NULL;
-}
-
-static int			go_heredoc(t_exec_lst *execlist, t_pars_list *list,
-						t_red_stream *buf_list)
+// static int			go_heredoc(t_exec_lst *execlist, t_pars_list *list, t_red_stream *buf_list)
+static int			go_heredoc(t_exec_lst *execlist, t_red_stream *buf_list)
 {
 	char *line;
 
 	if ((line = input_heredoc(execlist, buf_list->stream_name)))
-		add_param_for_heredoc(list, line);
+		// add_param_for_heredoc(list, line);
+		buf_list->fd_file = add_param_for_heredoc(execlist, line);
 	else
 		return (1);
 	return (0);
@@ -62,7 +71,8 @@ void				exec_redirect_heredoc(t_exec_lst *execlist,
 	if ((buf_list = check_heredoc(list->stream_list)))
 		while (buf_list)
 		{
-			if (go_heredoc(execlist, list, buf_list))
+			// if (go_heredoc(execlist, list, buf_list))
+			if (go_heredoc(execlist, buf_list))
 				break ;
 			buf_list = buf_list->next;
 			buf_list = check_heredoc(buf_list);

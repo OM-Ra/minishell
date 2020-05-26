@@ -63,6 +63,11 @@
 */
 # define DELIM_ERR	"parse error near"
 
+/*
+** OTHER
+*/
+# define NAME_HEREDOC	"/.minishell_heredoc"
+
 typedef int32_t			t_key;
 
 #endif
