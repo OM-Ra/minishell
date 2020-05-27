@@ -23,7 +23,8 @@
 // }
 
 // static void			add_param_for_heredoc(t_pars_list *list, char *line)
-static int			add_param_for_heredoc(t_exec_lst *execlist, char *line)
+static int			add_param_for_heredoc(t_exec_lst *execlist,
+						t_red_stream *buf_list, char *line)
 {
 	// size_t i;
 
@@ -35,6 +36,8 @@ static int			add_param_for_heredoc(t_exec_lst *execlist, char *line)
 
 	fd = new_or_open_file(execlist->path_heredoc, 1);
 	ft_putstr_fd(line, fd);
+	buf_list->save_std = dup(STDIN_FILENO);
+	buf_list->stream_a = STDIN_FILENO;
 	exec_dup_stream(STDIN_FILENO, fd);
 	return (fd);
 }
@@ -46,7 +49,7 @@ static int			go_heredoc(t_exec_lst *execlist, t_red_stream *buf_list)
 
 	if ((line = input_heredoc(execlist, buf_list->stream_name)))
 		// add_param_for_heredoc(list, line);
-		buf_list->fd_file = add_param_for_heredoc(execlist, line);
+		buf_list->fd_file = add_param_for_heredoc(execlist, buf_list, line);
 	else
 		return (1);
 	return (0);
@@ -66,7 +69,8 @@ static t_red_stream	*check_heredoc(t_red_stream *stream_list)
 void				exec_redirect_heredoc(t_exec_lst *execlist,
 						t_pars_list *list)
 {
-	t_red_stream *buf_list;
+	t_red_stream	*buf_list;
+	int				tmp_fd;
 
 	if ((buf_list = check_heredoc(list->stream_list)))
 		while (buf_list)
@@ -74,7 +78,9 @@ void				exec_redirect_heredoc(t_exec_lst *execlist,
 			// if (go_heredoc(execlist, list, buf_list))
 			if (go_heredoc(execlist, buf_list))
 				break ;
+			tmp_fd = buf_list->save_std;
 			buf_list = buf_list->next;
-			buf_list = check_heredoc(buf_list);
+			if ((buf_list = check_heredoc(buf_list)))
+				close(tmp_fd);
 		}
 }
