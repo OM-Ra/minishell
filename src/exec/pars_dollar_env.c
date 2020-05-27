@@ -74,21 +74,32 @@ char		*pars_insert_env_value(t_exec_lst *execlist, char **str)
 		else
 			ptr++;
 	}
+	if (!ft_strlen(*str))
+	{
+		free(*str);
+		return (NULL);
+	}
 	return (*str);
 }
 
 void		insert_dollar_args(t_exec_lst *execlist, t_pars_list *list)
 {
 	char	**ptr;
+	char	*new_line;
 	int		i;
 
 	i = 0;
 	ptr = list->pars_args;
 	while (*ptr)
 	{
-		list->pars_args[i] = pars_insert_env_value(execlist, ptr);
-		ptr++;
-		i++;
+		if ((new_line = pars_insert_env_value(execlist, ptr)))
+		{
+			list->pars_args[i] = new_line;
+			ptr++;
+			i++;
+		}
+		else
+			ptr = pars_dollar_shift_args(list->pars_args, i);
 	}
 	list->name_func = *(list->pars_args);
 }

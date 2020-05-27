@@ -60,6 +60,7 @@ int				exec_fill_way_for_path(t_exec_lst *execlist, char *str_path,
 					t_pars_list *list);
 void			exec_redirect_heredoc(t_exec_lst *execlist, t_pars_list *list);
 void			insert_dollar_args(t_exec_lst *execlist, t_pars_list *list);
+char			**pars_dollar_shift_args(char **pars_args, int i);
 /*
 ** comands
 */

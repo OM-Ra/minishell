@@ -110,7 +110,8 @@ SRC_EXEC					:=	check_choice.c\
 									exec_next_list.c\
 									exec_fill_way_for_path.c\
 									exec_redirect_heredoc.c\
-									pars_dollar_env.c
+									pars_dollar_env.c\
+									pars_dollar_shift_args.c
 
 SRCS						:=	$(SRC_MAIN)\
 									$(SRC_INIT)\
