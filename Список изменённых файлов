@@ -5,3 +5,7 @@ src/exec/pars_dollar_shift_args.c
 src/parser/parser.c - пока что, там только комментарий. Но если хиардок будет рабоать нормально, тогда нужно будет удалить одну строку и соответствующую функцию из парсинга.
 src/parser/pars_insert_tilda.c
 src/exec/exec_redirect_heredoc.c
+
+src/init/init.c
+include/sh_limits.h
+include/sh_struct.h
